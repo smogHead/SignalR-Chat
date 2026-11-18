@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="456" height="456" viewBox="0 0 456 456" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <!-- Two overlapping speech bubbles -->
+    <path d="M118 140h150a28 28 0 0 1 28 28v80a28 28 0 0 1-28 28h-90l-44 36v-36h-16a28 28 0 0 1-28-28v-80a28 28 0 0 1 28-28z" fill="#FFFFFF"/>
+    <path d="M318 196h20a28 28 0 0 1 28 28v72a28 28 0 0 1-28 28h-8v32l-38-32h-74a28 28 0 0 1-28-28v-8h78a50 50 0 0 0 50-50z" fill="#FFFFFF" fill-opacity="0.65"/>
+</svg>

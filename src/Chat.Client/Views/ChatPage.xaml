@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Chat.Client.ViewModels"
+             x:Class="Chat.Client.Views.ChatPage"
+             x:DataType="vm:ChatViewModel"
+             Title="{Binding Title}">
+
+    <Grid RowDefinitions="Auto,*,Auto,Auto">
+
+        <!-- Status + online users -->
+        <Grid Grid.Row="0" Padding="12,6" ColumnDefinitions="Auto,*"
+              BackgroundColor="{AppThemeBinding Light=#F4F2FA, Dark=#1E1B26}">
+            <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                <Ellipse WidthRequest="8" HeightRequest="8" VerticalOptions="Center">
+                    <Ellipse.Triggers>
+                        <DataTrigger TargetType="Ellipse" Binding="{Binding IsConnected}" Value="True">
+                            <Setter Property="Fill" Value="#2E7D32" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Ellipse" Binding="{Binding IsConnected}" Value="False">
+                            <Setter Property="Fill" Value="#EF6C00" />
+                        </DataTrigger>
+                    </Ellipse.Triggers>
+                </Ellipse>
+                <Label Text="{Binding Status}" FontSize="12" VerticalOptions="Center" />
+            </HorizontalStackLayout>
+
+            <CollectionView Grid.Column="1" ItemsSource="{Binding OnlineUsers}"
+                            ItemsLayout="HorizontalList" HorizontalOptions="End" HeightRequest="24">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <Border Padding="8,2" Margin="4,0,0,0" StrokeThickness="0"
+                                BackgroundColor="{StaticResource Primary}"
+                                StrokeShape="RoundRectangle 10">
+                            <Label Text="{Binding .}" FontSize="11" TextColor="White" />
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+
+        <!-- Messages -->
+        <CollectionView x:Name="MessagesView" Grid.Row="1"
+                        ItemsSource="{Binding Messages}"
+                        ItemsUpdatingScrollMode="KeepLastItemInView"
+                        Margin="8,4">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="vm:MessageItem">
+                    <Grid Padding="4,3">
+                        <!-- System notice -->
+                        <Label IsVisible="{Binding IsSystem}" Text="{Binding Text}"
+                               HorizontalOptions="Center" FontSize="12" FontAttributes="Italic"
+                               TextColor="{AppThemeBinding Light=#888, Dark=#999}" />
+
+                        <!-- Chat bubble -->
+                        <Border IsVisible="{Binding IsChat}" HorizontalOptions="{Binding Alignment}"
+                                MaximumWidthRequest="320" Padding="10,6" StrokeThickness="0"
+                                StrokeShape="RoundRectangle 12"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource TheirsBubbleLight}, Dark={StaticResource TheirsBubbleDark}}">
+                            <Border.Triggers>
+                                <DataTrigger TargetType="Border" Binding="{Binding IsMine}" Value="True">
+                                    <Setter Property="BackgroundColor" Value="{StaticResource MineBubble}" />
+                                </DataTrigger>
+                            </Border.Triggers>
+                            <VerticalStackLayout Spacing="2">
+                                <Label IsVisible="{Binding IsTheirs}" Text="{Binding User}"
+                                       FontSize="12" FontAttributes="Bold" TextColor="{StaticResource Primary}" />
+                                <Label Text="{Binding Text}" FontSize="15" LineBreakMode="WordWrap">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding IsMine}" Value="True">
+                                            <Setter Property="TextColor" Value="White" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                                <Label Text="{Binding Time}" FontSize="10" HorizontalOptions="End" Opacity="0.7">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding IsMine}" Value="True">
+                                            <Setter Property="TextColor" Value="White" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Typing indicator -->
+        <Label Grid.Row="2" Text="{Binding TypingText}" FontSize="12" FontAttributes="Italic"
+               Margin="16,0" TextColor="{AppThemeBinding Light=#777, Dark=#AAA}" />
+
+        <!-- Composer -->
+        <Grid Grid.Row="3" ColumnDefinitions="*,Auto" ColumnSpacing="8" Padding="8"
+              BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#121016}">
+            <Entry Text="{Binding Draft}" Placeholder="Message"
+                   ReturnType="Send" ReturnCommand="{Binding SendCommand}"
+                   IsEnabled="{Binding IsConnected}" />
+            <Button Grid.Column="1" Text="Send" Command="{Binding SendCommand}"
+                    IsEnabled="{Binding IsConnected}" />
+        </Grid>
+    </Grid>
+</ContentPage>

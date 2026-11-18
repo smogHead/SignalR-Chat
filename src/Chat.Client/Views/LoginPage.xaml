@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Chat.Client.ViewModels"
+             x:Class="Chat.Client.Views.LoginPage"
+             x:DataType="vm:LoginViewModel"
+             Title="SignalR Chat">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="14" MaximumWidthRequest="460">
+
+            <Label Text="Sign in" FontSize="28" FontAttributes="Bold" Margin="0,12,0,4" />
+            <Label Text="Connect to a chat server and join a room."
+                   TextColor="{AppThemeBinding Light=#666, Dark=#AAA}" />
+
+            <Label Text="Server URL" FontAttributes="Bold" Margin="0,8,0,0" />
+            <Entry Text="{Binding ServerUrl}" Keyboard="Url" Placeholder="http://localhost:8080" />
+
+            <Label Text="User name" FontAttributes="Bold" />
+            <Entry Text="{Binding UserName}" Placeholder="e.g. alice" MaxLength="32" />
+
+            <Label Text="Room" FontAttributes="Bold" />
+            <Entry Text="{Binding Room}" Placeholder="general" MaxLength="32"
+                   ReturnCommand="{Binding ConnectCommand}" />
+
+            <Button Text="Connect" Command="{Binding ConnectCommand}"
+                    IsEnabled="{Binding IsNotBusy}" Margin="0,8,0,0" />
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"
+                               Color="{StaticResource Primary}" />
+
+            <Label Text="{Binding Error}" TextColor="#C62828" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

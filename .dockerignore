@@ -1,0 +1,9 @@
+**/bin/
+**/obj/
+**/.vs/
+**/.vscode/
+**/*.user
+src/Chat.Client/
+src/Chat.Cli/
+.env
+.git
