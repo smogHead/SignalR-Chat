@@ -1,7 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net10.0-android;net10.0-ios;net10.0-maccatalyst</TargetFrameworks>
+    <!--
+      Android builds everywhere. Apple targets (iOS, Mac Catalyst) build on macOS; Windows builds on Windows.
+      Building Apple targets on Windows needs a paired Mac: opt in with  -p:IncludeAppleTargets=true
+    -->
+    <IncludeAppleTargets Condition="'$(IncludeAppleTargets)' == '' And $([MSBuild]::IsOSPlatform('osx'))">true</IncludeAppleTargets>
+    <TargetFrameworks>net10.0-android</TargetFrameworks>
+    <TargetFrameworks Condition="'$(IncludeAppleTargets)' == 'true'">$(TargetFrameworks);net10.0-ios;net10.0-maccatalyst</TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net10.0-windows10.0.19041.0</TargetFrameworks>
 
     <OutputType>Exe</OutputType>
