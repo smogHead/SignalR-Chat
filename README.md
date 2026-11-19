@@ -43,6 +43,8 @@ src/
 - Docker (Desktop or Engine with Compose v2)
 - .NET 10 SDK with the MAUI workload: `dotnet workload install maui`
 - iOS / Mac Catalyst builds need a Mac with Xcode; Windows builds need Windows. Android builds anywhere with the Android SDK.
+- The project picks targets per OS automatically: **Windows** → Android + Windows, **macOS** → Android + iOS + Mac Catalyst.
+  To build iOS from Windows via a paired Mac (Visual Studio "Pair to Mac"), add `-p:IncludeAppleTargets=true`.
 
 ## 1. Run the server
 

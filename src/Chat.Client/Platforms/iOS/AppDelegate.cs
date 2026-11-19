@@ -1,3 +1,4 @@
+#if IOS
 using Foundation;
 
 namespace Chat.Client;
@@ -7,3 +8,4 @@ public class AppDelegate : MauiUIApplicationDelegate
 {
     protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
 }
+#endif
