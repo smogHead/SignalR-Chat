@@ -2,8 +2,8 @@
 
 Real-time chat with rooms, history, presence and typing indicators.
 
-- **Server**: ASP.NET Core 10 + SignalR, runs in Docker, scales horizontally via a Redis backplane behind nginx.
-- **Clients**: one .NET MAUI 10 app for **iOS, Android, macOS (Mac Catalyst) and Windows**.
+- **Server**: ASP.NET Core 11 + SignalR, runs in Docker, scales horizontally via a Redis backplane behind nginx.
+- **Clients**: one .NET MAUI 11 app for **iOS, Android, macOS (Mac Catalyst) and Windows**.
 - **CLI**: a small console client for testing the server without a device.
 
 ```
@@ -41,7 +41,7 @@ src/
 ## Prerequisites
 
 - Docker (Desktop or Engine with Compose v2)
-- .NET 10 SDK with the MAUI workload: `dotnet workload install maui`
+- .NET 11 SDK with the MAUI workload: `dotnet workload install maui`
 - iOS / Mac Catalyst builds need a Mac with Xcode; Windows builds need Windows. Android builds anywhere with the Android SDK.
 
 ## 1. Run the server
@@ -76,10 +76,12 @@ dotnet run --project src/Chat.Cli -- bob   general
 
 ```bash
 cd src/Chat.Client
-dotnet build -t:Run -f net10.0-android                 # Android emulator/device
-dotnet build -t:Run -f net10.0-ios                     # iOS simulator (on a Mac)
-dotnet build -t:Run -f net10.0-maccatalyst             # macOS app (on a Mac)
-dotnet build -t:Run -f net10.0-windows10.0.19041.0     # Windows (on Windows)
+dotnet build -t:Run -f net11.0-android                 # Android emulator/device
+dotnet build -t:Run -f net11.0-ios                     # iOS simulator (on a Mac)
+dotnet build -t:Run -f net11.0-maccatalyst             # macOS app (on a Mac)
+dotnet build -t:Run -f net11.0-windows10.0.19041.0     # Windows (on Windows)
+dotnet build -t:Run -f net11.0-maccatalyst -p:RuntimeIdentifier=maccatalyst-x64
+dotnet build -t:Run -f net11.0-maccatalyst -r maccatalyst-x64
 ```
 
 Or open `SignalRChat.slnx` in Visual Studio / VS Code (C# Dev Kit + .NET MAUI extension) / Rider and pick the target.

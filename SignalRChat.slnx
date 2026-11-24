@@ -2,7 +2,9 @@
   <Folder Name="/src/">
     <Project Path="src/Chat.Shared/Chat.Shared.csproj" />
     <Project Path="src/Chat.Server/Chat.Server.csproj" />
-    <Project Path="src/Chat.Client/Chat.Client.csproj" />
+    <Project Path="src/Chat.Client/Chat.Client.csproj">
+      <Deploy />
+    </Project>
     <Project Path="src/Chat.Cli/Chat.Cli.csproj" />
   </Folder>
 </Solution>
