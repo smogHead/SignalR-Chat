@@ -1,3 +1,4 @@
+#if IOS
 using Foundation;
 
 namespace Chat.Client;
