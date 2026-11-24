@@ -18,7 +18,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
-    <ApplicationTitle>SignalR Chat</ApplicationTitle>
+    <!-- No spaces: on Mac Catalyst the .app bundle is named from this, and `-t:Run` can't find a spaced name.
+         The friendly name shown to users comes from CFBundleDisplayName in the iOS/MacCatalyst Info.plist. -->
+    <ApplicationTitle>SignalRChat</ApplicationTitle>
     <ApplicationId>com.example.signalrchat</ApplicationId>
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>
