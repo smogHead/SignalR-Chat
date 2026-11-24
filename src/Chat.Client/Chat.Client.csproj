@@ -1,9 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<TargetFrameworks>net11.0-android;net11.0-ios;net11.0-maccatalyst</TargetFrameworks>
-	<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net11.0-windows10.0.19041.0</TargetFrameworks>
-	<OutputType>Exe</OutputType>
+    <!--
+      Android builds everywhere. Apple targets (iOS, Mac Catalyst) build on macOS; Windows builds on Windows.
+      To build Apple targets on Windows via a paired Mac, opt in with  -p:IncludeAppleTargets=true
+    -->
+    <IncludeAppleTargets Condition="'$(IncludeAppleTargets)' == '' And $([MSBuild]::IsOSPlatform('osx'))">true</IncludeAppleTargets>
+    <TargetFrameworks>net11.0-android</TargetFrameworks>
+    <TargetFrameworks Condition="'$(IncludeAppleTargets)' == 'true'">$(TargetFrameworks);net11.0-ios;net11.0-maccatalyst</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net11.0-windows10.0.19041.0</TargetFrameworks>
+
+    <OutputType>Exe</OutputType>
     <RootNamespace>Chat.Client</RootNamespace>
     <UseMaui>true</UseMaui>
     <SingleProject>true</SingleProject>
@@ -45,12 +52,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Chat.Shared\Chat.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Microsoft.iOS">
-      <HintPath>C:\Program Files\dotnet\packs\Microsoft.iOS.Ref.net11.0_27.2\27.2.11039\ref\net11.0\Microsoft.iOS.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

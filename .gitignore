@@ -5,3 +5,5 @@ obj/
 .idea/
 *.user
 .env
+.DS_Store
+*.Backup.tmp

@@ -1,4 +1,5 @@
-﻿using Foundation;
+#if IOS
+using Foundation;
 using Microsoft.Maui.Platform;
 using System;
 using System.Collections.Generic;
@@ -12,3 +13,4 @@ public class SceneDelegate : MauiUISceneDelegate
 {
 }
 }
+#endif
