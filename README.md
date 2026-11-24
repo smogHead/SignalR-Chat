@@ -44,7 +44,8 @@ src/
 - .NET 11 SDK with the MAUI workload: `dotnet workload install maui`
 - iOS / Mac Catalyst builds need a Mac with Xcode; Windows builds need Windows. Android builds anywhere with the Android SDK.
 - The project picks targets per OS automatically: **Windows** → Android + Windows, **macOS** → Android + iOS + Mac Catalyst.
-  To build iOS from Windows via a paired Mac (Visual Studio "Pair to Mac"), add `-p:IncludeAppleTargets=true`.
+  To build iOS from Windows via a paired Mac (Visual Studio "Pair to Mac"), set `IncludeAppleTargets=true` (environment
+  variable, `Directory.Build.props`, or `-p:` on the command line). Mac Catalyst can only be built on a Mac.
 
 ## 1. Run the server
 

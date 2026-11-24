@@ -2,12 +2,13 @@
 
   <PropertyGroup>
     <!--
-      Android builds everywhere. Apple targets (iOS, Mac Catalyst) build on macOS; Windows builds on Windows.
-      To build Apple targets on Windows via a paired Mac, opt in with  -p:IncludeAppleTargets=true
+      macOS:   Android + iOS + Mac Catalyst
+      Windows: Android + Windows. Set IncludeAppleTargets=true (env var or Directory.Build.props)
+               to add iOS via Visual Studio "Pair to Mac". Mac Catalyst can't be built/run from Windows.
     -->
-    <IncludeAppleTargets Condition="'$(IncludeAppleTargets)' == '' And $([MSBuild]::IsOSPlatform('osx'))">true</IncludeAppleTargets>
     <TargetFrameworks>net11.0-android</TargetFrameworks>
-    <TargetFrameworks Condition="'$(IncludeAppleTargets)' == 'true'">$(TargetFrameworks);net11.0-ios;net11.0-maccatalyst</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('osx'))">$(TargetFrameworks);net11.0-ios;net11.0-maccatalyst</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows')) And '$(IncludeAppleTargets)' == 'true'">$(TargetFrameworks);net11.0-ios</TargetFrameworks>
     <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net11.0-windows10.0.19041.0</TargetFrameworks>
 
     <OutputType>Exe</OutputType>
