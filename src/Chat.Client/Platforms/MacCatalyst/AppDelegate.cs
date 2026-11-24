@@ -1,3 +1,4 @@
+#if MACCATALYST
 using Foundation;
 
 namespace Chat.Client;

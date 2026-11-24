@@ -7,8 +7,8 @@ using UIKit;
 
 namespace Chat.Client.Platforms.iOS
 {
-    [Register("SceneDelegate")]
-    public class SceneDelegate : MauiUISceneDelegate
-    {
-    }
+[Register("SceneDelegate")]
+public class SceneDelegate : MauiUISceneDelegate
+{
+}
 }
