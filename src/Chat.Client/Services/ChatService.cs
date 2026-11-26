@@ -31,7 +31,7 @@ public sealed class ChatService(ILogger<ChatService> log) : IAsyncDisposable
     public static string DefaultServerUrl =>
         DeviceInfo.Platform == DevicePlatform.Android && DeviceInfo.DeviceType == DeviceType.Virtual
             ? "http://10.0.2.2:8080" // Android emulator -> host machine
-            : "http://localhost:5080"; // iOS simulator, Mac, Windows
+            : "http://localhost:8080"; // iOS simulator, Mac, Windows
 
     public async Task ConnectAsync(string serverUrl, string userName, CancellationToken ct = default)
     {
