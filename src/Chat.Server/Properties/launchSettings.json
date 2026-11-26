@@ -2,11 +2,11 @@
   "profiles": {
     "Chat.Server": {
       "commandName": "Project",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://localhost:64513;http://localhost:64514"
+      "applicationUrl": "http://0.0.0.0:5080;https://localhost:7080"
     }
   }
 }
