@@ -85,7 +85,14 @@ dotnet build -t:Run -f net11.0-maccatalyst             # macOS app (on a Mac)
 dotnet build -t:Run -f net11.0-windows10.0.19041.0     # Windows (on Windows)
 dotnet build -t:Run -f net11.0-maccatalyst -p:RuntimeIdentifier=maccatalyst-x64
 dotnet build -t:Run -f net11.0-maccatalyst -r maccatalyst-x64
+
+
+dotnet build src/Chat.Client/Chat.Client.csproj -t:Run -f net11.0-maccatalyst -r maccatalyst-x64
+
+dotnet build -t:Run -f net11.0-maccatalyst  -r maccatalyst-x64
+
 ```
+
 
 Or open `SignalRChat.slnx` in Visual Studio / VS Code (C# Dev Kit + .NET MAUI extension) / Rider and pick the target.
 

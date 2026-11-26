@@ -1,5 +1,6 @@
 // Minimal terminal client for smoke-testing the server.
-//   dotnet run --project src/Chat.Cli -- alice general http://localhost:8080
+//   dotnet run --project src/Chat.Cli -- alice general http://localhost:5080
+
 using System.Net.Http.Json;
 using Chat.Shared;
 using Microsoft.AspNetCore.Http.Connections;
@@ -7,7 +8,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 
 var user = args.ElementAtOrDefault(0) ?? $"cli-{Random.Shared.Next(1000)}";
 var room = args.ElementAtOrDefault(1) ?? "general";
-var server = (args.ElementAtOrDefault(2) ?? "http://localhost:8080").TrimEnd('/');
+var server = (args.ElementAtOrDefault(2) ?? "http://localhost:5080").TrimEnd('/');
 
 using var http = new HttpClient();
 var tokenResp = await http.PostAsJsonAsync($"{server}{ChatRoutes.Token}", new TokenRequest(user));
@@ -15,14 +16,14 @@ tokenResp.EnsureSuccessStatusCode();
 var token = (await tokenResp.Content.ReadFromJsonAsync<TokenResponse>())!.AccessToken;
 
 await using var conn = new HubConnectionBuilder()
-    .WithUrl($"{server}{ChatRoutes.Hub}", o =>
-    {
-        o.Transports = HttpTransportType.WebSockets;
-        o.SkipNegotiation = true;
-        o.AccessTokenProvider = () => Task.FromResult<string?>(token);
-    })
-    .WithAutomaticReconnect()
-    .Build();
+                       .WithUrl($"{server}{ChatRoutes.Hub}", o =>
+                       {
+                           o.Transports = HttpTransportType.WebSockets;
+                           o.SkipNegotiation = true;
+                           o.AccessTokenProvider = () => Task.FromResult<string?>(token);
+                       })
+                       .WithAutomaticReconnect()
+                       .Build();
 
 conn.On<ChatMessage>(nameof(IChatClient.ReceiveMessage), m =>
 {
@@ -40,6 +41,12 @@ Console.WriteLine($"-- {user} in #{room}. Type a message, or /quit --");
 while (Console.ReadLine() is { } line && line != "/quit")
 {
     if (string.IsNullOrWhiteSpace(line)) continue;
-    try { await conn.InvokeAsync<ChatMessage>(HubMethods.SendMessage, room, line); }
-    catch (Exception ex) { Console.WriteLine($"! {ex.Message}"); }
+    try
+    {
+        await conn.InvokeAsync<ChatMessage>(HubMethods.SendMessage, room, line);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"! {ex.Message}");
+    }
 }

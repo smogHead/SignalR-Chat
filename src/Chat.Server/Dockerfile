@@ -13,7 +13,7 @@ RUN dotnet publish src/Chat.Server/Chat.Server.csproj -c Release -o /app --no-re
 FROM mcr.microsoft.com/dotnet/aspnet:11.0 AS runtime
 WORKDIR /app
 COPY --from=build /app .
-ENV ASPNETCORE_URLS=http://+:8080
-EXPOSE 8080
+ENV ASPNETCORE_URLS=http://+:5080
+EXPOSE 5080
 USER $APP_UID
 ENTRYPOINT ["dotnet", "Chat.Server.dll"]
