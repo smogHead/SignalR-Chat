@@ -13,7 +13,7 @@ Real-time chat with rooms, history, presence and typing indicators.
       └────────────┴─ WebSocket ┴────────────┘
                          │  (JWT in access_token)
                   ┌──────▼──────┐
-                  │    nginx    │  :8080, round-robin
+                  │    nginx    │  :5080, round-robin
                   └──────┬──────┘
           ┌──────────────┼──────────────┐
    ┌──────▼─────┐ ┌──────▼─────┐ ┌──────▼─────┐
@@ -52,7 +52,7 @@ src/
 ```bash
 cp .env.example .env          # then edit JWT_SIGNING_KEY (32+ chars)
 docker compose up --build
-curl http://localhost:8080/health      # -> Healthy
+curl http://localhost:5080/health      # -> Healthy
 ```
 
 Scale out to prove the backplane works:
@@ -64,7 +64,7 @@ docker compose up --build --scale chat-server=3
 Messages sent to any replica reach users connected to every other replica.
 
 **Run without Docker** (for debugging): start Redis (`docker run -p 6379:6379 redis:7-alpine`), then
-`dotnet run --project src/Chat.Server --urls http://localhost:8080` — Development settings supply a dev signing key.
+`dotnet run --project src/Chat.Server --urls http://localhost:5080` — Development settings supply a dev signing key.
 
 ## 2. Smoke-test with the CLI
 
@@ -100,10 +100,10 @@ Or open `SignalRChat.slnx` in Visual Studio / VS Code (C# Dev Kit + .NET MAUI ex
 
 | Where the app runs          | Server URL                    |
 |-----------------------------|-------------------------------|
-| Windows / macOS (same box)  | `http://localhost:8080`       |
-| iOS simulator               | `http://localhost:8080`       |
-| Android emulator            | `http://10.0.2.2:8080` (pre-filled) |
-| Physical phone              | `http://<your-PC-LAN-IP>:8080` |
+| Windows / macOS (same box)  | `http://localhost:5080`       |
+| iOS simulator               | `http://localhost:5080`       |
+| Android emulator            | `http://10.0.2.2:5080` (pre-filled) |
+| Physical phone              | `http://<your-PC-LAN-IP>:5080` |
 
 For a physical Android device on plain HTTP, add your LAN IP to
 `Platforms/Android/Resources/xml/network_security_config.xml`. iOS/macOS allow local-network HTTP via

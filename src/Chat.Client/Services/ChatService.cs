@@ -24,14 +24,14 @@ public sealed class ChatService(ILogger<ChatService> log) : IAsyncDisposable
 
     public event Action<ChatMessage>? MessageReceived;
     public event Action<PresenceEvent>? PresenceChanged;
-    public event Action<string, string>? UserTyping;          // room, user
+    public event Action<string, string>? UserTyping; // room, user
     public event Action<HubConnectionState, string?>? StateChanged; // state, detail
 
     /// <summary>Sensible default server address for the current platform.</summary>
     public static string DefaultServerUrl =>
         DeviceInfo.Platform == DevicePlatform.Android && DeviceInfo.DeviceType == DeviceType.Virtual
-            ? "http://10.0.2.2:8080"   // Android emulator -> host machine
-            : "http://localhost:8080"; // iOS simulator, Mac, Windows
+            ? "http://10.0.2.2:8080" // Android emulator -> host machine
+            : "http://localhost:5080"; // iOS simulator, Mac, Windows
 
     public async Task ConnectAsync(string serverUrl, string userName, CancellationToken ct = default)
     {
@@ -42,17 +42,17 @@ public sealed class ChatService(ILogger<ChatService> log) : IAsyncDisposable
         await RefreshTokenAsync(ct);
 
         _connection = new HubConnectionBuilder()
-            .WithUrl(new Uri(_baseUri, ChatRoutes.Hub.TrimStart('/')), o =>
-            {
-                // WebSockets-only + skip negotiation => no sticky sessions needed behind a load balancer.
-                o.Transports = HttpTransportType.WebSockets;
-                o.SkipNegotiation = true;
-                o.AccessTokenProvider = GetTokenAsync;
-            })
-            .WithAutomaticReconnect(new ForeverRetryPolicy())
-            .WithKeepAliveInterval(TimeSpan.FromSeconds(15))
-            .WithServerTimeout(TimeSpan.FromSeconds(30))
-            .Build();
+                      .WithUrl(new Uri(_baseUri, ChatRoutes.Hub.TrimStart('/')), o =>
+                      {
+                          // WebSockets-only + skip negotiation => no sticky sessions needed behind a load balancer.
+                          o.Transports = HttpTransportType.WebSockets;
+                          o.SkipNegotiation = true;
+                          o.AccessTokenProvider = GetTokenAsync;
+                      })
+                      .WithAutomaticReconnect(new ForeverRetryPolicy())
+                      .WithKeepAliveInterval(TimeSpan.FromSeconds(15))
+                      .WithServerTimeout(TimeSpan.FromSeconds(30))
+                      .Build();
 
         _connection.On<ChatMessage>(nameof(IChatClient.ReceiveMessage), m => MessageReceived?.Invoke(m));
         _connection.On<PresenceEvent>(nameof(IChatClient.UserJoined), e => PresenceChanged?.Invoke(e));
@@ -69,9 +69,16 @@ public sealed class ChatService(ILogger<ChatService> log) : IAsyncDisposable
             // Group membership lives on the old connection id; re-join after reconnect.
             foreach (var room in _rooms.ToArray())
             {
-                try { await _connection.InvokeAsync<IReadOnlyList<ChatMessage>>(HubMethods.JoinRoom, room); }
-                catch (Exception ex) { log.LogWarning(ex, "Re-join of {Room} failed", room); }
+                try
+                {
+                    await _connection.InvokeAsync<IReadOnlyList<ChatMessage>>(HubMethods.JoinRoom, room);
+                }
+                catch (Exception ex)
+                {
+                    log.LogWarning(ex, "Re-join of {Room} failed", room);
+                }
             }
+
             StateChanged?.Invoke(HubConnectionState.Connected, "Reconnected");
         };
         _connection.Closed += ex =>
@@ -135,8 +142,8 @@ public sealed class ChatService(ILogger<ChatService> log) : IAsyncDisposable
     private async Task RefreshTokenAsync(CancellationToken ct)
     {
         var response = await _http.PostAsJsonAsync(
-            new Uri(_baseUri!, ChatRoutes.Token.TrimStart('/')),
-            new TokenRequest(UserName!), ct);
+                                                   new Uri(_baseUri!, ChatRoutes.Token.TrimStart('/')),
+                                                   new TokenRequest(UserName!), ct);
         response.EnsureSuccessStatusCode();
         var token = await response.Content.ReadFromJsonAsync<TokenResponse>(ct)
                     ?? throw new InvalidOperationException("Empty token response.");
